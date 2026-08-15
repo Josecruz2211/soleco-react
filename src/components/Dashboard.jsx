@@ -1,12 +1,18 @@
 function Dashboard() {
   return (
-    <section>
-      <h1>Panel Principal</h1>
+    <main>
+      <section>
+        <h1>Bienvenido a Soleco</h1>
 
-      <p>Total Clientes: 50</p>
-      <p>Total Productos: 120</p>
-      <p>Pedidos Realizados: 35</p>
-    </section>
+        <p>
+          Bienvenido, usuario.
+        </p>
+
+        <p>
+          Desde el menu principal puedes realizar y consultar tus pedidos.
+        </p>
+      </section>
+    </main>
   );
 }
 

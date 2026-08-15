@@ -2,45 +2,52 @@ function OrderHistory() {
   const pedidos = [
     {
       id: "001",
+      fecha: "05/08/2026",
       cliente: "Juan Pérez",
-      total: "$35.000"
+      estado: "Entregado"
     },
     {
       id: "002",
+      fecha: "04/08/2026",
       cliente: "María Gómez",
-      total: "$28.000"
+      estado: "Pendiente"
     },
     {
       id: "003",
+      fecha: "02/08/2026",
       cliente: "Carlos Rodríguez",
-      total: "$42.000"
+      estado: "Cancelado"
     }
   ];
 
   return (
-    <section>
-      <h2>Historial de Pedidos</h2>
+    <main>
+      <section>
+        <h1>Historial de Pedidos</h1>
 
-      <table className="tabla-pedidos">
-        <thead>
-          <tr>
-            <th>Pedido</th>
-            <th>Cliente</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {pedidos.map((pedido) => (
-            <tr key={pedido.id}>
-              <td>#{pedido.id}</td>
-              <td>{pedido.cliente}</td>
-              <td>{pedido.total}</td>
+        <table className="tabla-pedidos">
+          <thead>
+            <tr>
+              <th>Pedido</th>
+              <th>Fecha</th>
+              <th>Cliente / Establecimiento</th>
+              <th>Estado</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
+          </thead>
+
+          <tbody>
+            {pedidos.map((pedido) => (
+              <tr key={pedido.id}>
+                <td>#{pedido.id}</td>
+                <td>{pedido.fecha}</td>
+                <td>{pedido.cliente}</td>
+                <td>{pedido.estado}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </main>
   );
 }
 
