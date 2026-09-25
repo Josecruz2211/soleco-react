@@ -8,7 +8,7 @@ function Login({ setAutenticado }) {
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
 
-  const iniciarSesion = (event) => {
+  const iniciarSesion = async (event) => {
     event.preventDefault();
 
     if (!correo.trim() || !contrasena.trim()) {
@@ -16,9 +16,43 @@ function Login({ setAutenticado }) {
       return;
     }
 
-    setError("");
-    setAutenticado(true);
-    navigate("/");
+    try {
+      setError("");
+
+      const respuesta = await fetch(
+        "http://localhost:3000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            correo,
+            contrasena
+          })
+        }
+      );
+
+      const resultado = await respuesta.json();
+
+      if (!respuesta.ok) {
+        setError(resultado.message || "Credenciales incorrectas.");
+        return;
+      }
+
+      const token = resultado.data?.token;
+
+      if (!token) {
+        setError("La API no devolvió un token de autenticación.");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+      setAutenticado(true);
+      navigate("/");
+    } catch {
+      setError("No fue posible conectar con la API.");
+    }
   };
 
   return (

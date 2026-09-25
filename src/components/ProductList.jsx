@@ -1,34 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function ProductList({ onAgregar }) {
   const [busqueda, setBusqueda] = useState("");
+  const [productos, setProductos] = useState([]);
+  const [error, setError] = useState("");
 
-  const productos = [
-    {
-      id: 1,
-      nombre: "Detergente",
-      precio: 15000,
-      imagen: "https://via.placeholder.com/150"
-    },
-    {
-      id: 2,
-      nombre: "Cloro",
-      precio: 8000,
-      imagen: "https://via.placeholder.com/150"
-    },
-    {
-      id: 3,
-      nombre: "Desinfectante",
-      precio: 12000,
-      imagen: "https://via.placeholder.com/150"
-    },
-    {
-      id: 4,
-      nombre: "Jabón Líquido",
-      precio: 10000,
-      imagen: "https://via.placeholder.com/150"
-    }
-  ];
+  useEffect(() => {
+    const obtenerProductos = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const respuesta = await fetch(
+          "http://localhost:3000/api/productos",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+          setError(resultado.message || "No fue posible obtener los productos.");
+          return;
+        }
+
+        setProductos(resultado.data || []);
+      } catch {
+        setError("No fue posible conectar con la API.");
+      }
+    };
+
+    obtenerProductos();
+  }, []);
 
   const productosFiltrados = productos.filter((producto) =>
     producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
@@ -46,18 +51,15 @@ function ProductList({ onAgregar }) {
         aria-label="Buscar producto"
       />
 
+      {error && <p>{error}</p>}
+
       <div className="productos-grid">
         {productosFiltrados.map((producto) => (
-          <div className="producto-card" key={producto.id}>
-            <img
-              src={producto.imagen}
-              alt={producto.nombre}
-            />
-
+          <div className="producto-card" key={producto.id_producto}>
             <h3>{producto.nombre}</h3>
 
             <p>
-              ${producto.precio.toLocaleString("es-CO")}
+              ${Number(producto.precio).toLocaleString("es-CO")}
             </p>
 
             <button

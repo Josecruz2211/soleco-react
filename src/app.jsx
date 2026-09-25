@@ -6,16 +6,29 @@ import OrderForm from "./components/OrderForm";
 import OrderHistory from "./components/OrderHistory";
 import OrderSummary from "./components/OrderSummary";
 import Footer from "./components/Footer";
+import CustomerList from "./components/CustomerList";
 import { Navigate, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 
+
 function App() {
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
-  const [autenticado, setAutenticado] = useState(false);
+  const [autenticado, setAutenticado] = useState(
+    () => Boolean(localStorage.getItem("token"))
+  );
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
+ 
 
   return (
     <>
-      {autenticado && <Navbar cerrarSesion={() => setAutenticado(false)} />}
+      {autenticado && (
+        <Navbar
+          cerrarSesion={() => {
+            localStorage.removeItem("token");
+            setAutenticado(false);
+          }}
+           />
+      )}
 
       <Routes>
         <Route path="/"
@@ -35,6 +48,8 @@ function App() {
             <OrderForm
               productosSeleccionados={productosSeleccionados}
               setProductosSeleccionados={setProductosSeleccionados}
+              clienteSeleccionado={clienteSeleccionado}
+              setClienteSeleccionado={setClienteSeleccionado}
             />
             ) : (
               <Navigate to="/login" replace />
@@ -72,6 +87,9 @@ function App() {
             autenticado ? (
             <OrderSummary
               productosSeleccionados={productosSeleccionados}
+              clienteSeleccionado={clienteSeleccionado}
+              setProductosSeleccionados={setProductosSeleccionados}
+              setClienteSeleccionado={setClienteSeleccionado}
             />
             ) : (
               <Navigate to="/login" replace />
@@ -82,6 +100,9 @@ function App() {
         path="/login"
         element={<Login setAutenticado={setAutenticado}/>}
         />
+
+        <Route 
+      path="/clientes" element={<CustomerList />} />
       </Routes>
       <Footer />
     </>
